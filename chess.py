@@ -55,17 +55,30 @@ chess_notation_to_list = {
     '7': 6,
     '8': 7}
 def move_piece(board):
-    """Takes as input two different tiles (e4, c5, etc) and takes the first
+    """Asks the user two different tiles (e4, c5, etc) and takes the first
     input as the initial board position and takes the second input as the final
     board position"""
     initial_square = input("From what square?")
     final_square = input("To what square?")
-    initial_index_one = chess_notation_to_list[initial_square[0]]
-    initial_index_two = chess_notation_to_list[initial_square[1]]
-    final_index_one = chess_notation_to_list[final_square[0]]
-    final_index_two = chess_notation_to_list[final_square[1]]
-    return (initial_index_one, initial_index_two,
-            final_index_one, final_index_two)
+    initial_column = chess_notation_to_list[initial_square[0]]
+    print(initial_column, "initial_column")
+    initial_row = chess_notation_to_list[initial_square[1]]
+    print(initial_row, "initial_row")
+    final_column = chess_notation_to_list[final_square[0]]
+    print(final_column, "final_column")
+    final_row = chess_notation_to_list[final_square[1]]
+    print(final_row, "final_row")
+    starting_square = board[initial_column][initial_row]
+    print(starting_square, "starting_square")
+    ending_square = board[final_column][final_row]
+    print(ending_square, "ending_square")
+    new_board = starting_square.replace(starting_square, ' ')
+    print(new_board, "new_board")
+    new_board = new_board.replace(new_board[final_column][final_row], starting_sqaure)
+    print(new_board, "new_board")
+    
+
+    return new_board
 #My tests:
 initial_board = [['R','N','B','Q','K','B','N','R'],
          ['P','P','P','P','P','P','P','P'],
