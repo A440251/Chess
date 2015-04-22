@@ -1,7 +1,15 @@
 #Chess, for learning purposes. By /u/A440251.
-#TODO: start adding rules for how a piece is allowed to move.
+#TODO: work on the king_in_check logic. After that, work on START_2P
+"""
+Welcome to Chess!
 
+Please input an answer:
 
+An answer of "!STARTAI will play against the computer.
+An answer of "!START2P will start a game for two players.
+An answer of !QUIT" will quit the game.
+
+"""
 initial_board = [['R','N','B','Q','K','B','N','R'],
          ['P','P','P','P','P','P','P','P'],
          [' ',' ',' ',' ',' ',' ',' ',' '],
@@ -11,27 +19,7 @@ initial_board = [['R','N','B','Q','K','B','N','R'],
          ['p','p','p','p','p','p','p','p'],
          ['r','n','b','q','k','b','n','r']]
 
-def draw_board(board):
-    #A great way to think about printing the board.
-    #I'm going to comment this code to confirm I actually know what it does
-    #instead of blindly copy and pasting.
-    for column_no, column in enumerate(board):
-        #enumerate is a great way to count indexes. Based on the size of the
-        #board, column_no counts the columns and column is the representation
-        #of what is in board[column_no]
-        #https://docs.python.org/3/library/functions.html#enumerate
-        print("|%s| %d"%("|".join(column), 8-column_no))
-        #prints out each individiual square with the given piece, followed by
-        #the row markers on the right.
-    print(" a b c d e f g h ")
-        #This marks the columns
-    #Also, this looks better than what was submitted before. I don't think that
-    #there is a need to add the other dashes.
-
-draw_board(initial_board)
-
 def create_chess_notation_to_dict(board):
-    #Let's apply the same concept to this chess_notation_to_list dict.
     columns = "abcdefgh"
     rtn_dict = {}
     for column_no, column in enumerate(board):
@@ -39,8 +27,19 @@ def create_chess_notation_to_dict(board):
     for row_no, row in enumerate(board):
         rtn_dict[str(row_no+1)] = 7 - row_no
     return rtn_dict
-
 the_dict = create_chess_notation_to_dict(initial_board)
+
+
+def draw_board(board):
+    for column_no, column in enumerate(board):
+        print("|%s| %d"%("|".join(column), 8-column_no))
+        #prints out each individiual square with the given piece, followed by
+        #the row markers on the right.
+    print(" a b c d e f g h ")
+
+
+
+
 
 def move_piece(board):
     """Asks the user two different tiles (e4, c5, etc) and takes the first
@@ -59,6 +58,9 @@ def move_piece(board):
     starting_square = board[initial_row][initial_column]
     ending_square = board[final_row][final_column]
 
+    #The logic that determines how a piece may move.
+        
+
     #changing the value in the list that represents the board
     board[initial_row][initial_column] = ' '
     board[final_row][final_column] = starting_square
@@ -68,5 +70,49 @@ def move_piece(board):
 
     return board
 
+def king_in_check(board):
+    for column_no, column in enumerate(board):
+        for row_no, row in enumerate(column):
+            if column[row_no] == 'K':
+                print(column_no, row_no)
+            elif column[row_no] == 'k':
+                print(column_no, row_no)
+def START_2P():
+    game_over = False
+    whites_turn = True
+    turn_number = 1
+    draw_board(board)
+    while not game_over:
+        
+        if whites_turn:
+            if not king_in_check(board):
+                turn_number += 1
+                whites_turn = not whites_turn
+        else:
+            pass
+def welcome():
+    print(__doc__)
 
-move_piece(initial_board)
+def main():
+    done = False
+    while not done:
+        welcome()
+        answer = input("What is your answer?\n...>")
+        if answer.upper() == "!STARTAI":
+            START_AI()
+        if answer.upper() == "!START2P":
+            START_2P()
+        if answer.upper() == "!QUIT":
+            break
+    print("Thanks for playing Chess! Goodbye!")
+
+"""
+if __name__ == "__main__":
+    main()
+"""
+
+def test_suite():
+    draw_board(initial_board)
+    king_in_check(initial_board)
+
+test_suite()
