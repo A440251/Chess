@@ -1,6 +1,5 @@
 #Chess, for learning purposes. By /u/A440251.
-#TODO: figure out how to change the values of initial_board based on the
-#      move that the user inputs. 
+#TODO: start adding rules for how a piece is allowed to move.
 
 
 initial_board = [['R','N','B','Q','K','B','N','R'],
@@ -38,41 +37,36 @@ def create_chess_notation_to_dict(board):
     for column_no, column in enumerate(board):
         rtn_dict[columns[column_no]] = column_no
     for row_no, row in enumerate(board):
-        rtn_dict[str(row_no+1)] = row_no
+        rtn_dict[str(row_no+1)] = 7 - row_no
     return rtn_dict
 
 the_dict = create_chess_notation_to_dict(initial_board)
-print(the_dict)
-print(the_dict['2'])
+
 def move_piece(board):
-    #TODO:
-    #I definitely should be able to use enumerate() in some way to make all
-    #these printing tasks easier.
     """Asks the user two different tiles (e4, c5, etc) and takes the first
     input as the initial board position and takes the second input as the final
     board position"""
     initial_square = input("From what square?")
     final_square = input("To what square?")
+    
+    #These assignments convert chess moves to list indexes
     initial_column = the_dict[initial_square[0]]
-    print(initial_column, "initial_column")
     initial_row = the_dict[initial_square[1]]
-    print(initial_row, "initial_row")
     final_column = the_dict[final_square[0]]
-    print(final_column, "final_column")
     final_row = the_dict[final_square[1]]
-    print(final_row, "final_row")
-    starting_square = board[initial_column][initial_row]
-    print(starting_square, "starting_square")
-    ending_square = board[final_column][final_row]
-    print(ending_square, "ending_square")
-    new_board = starting_square.replace(starting_square, ' ')
-    print(new_board, "new_board")
-    #new_board = new_board.replace(new_board[final_column][final_row], starting_sqaure)
-    #print(new_board, "new_board")
+
+    #the string values for what is at the given board position
+    starting_square = board[initial_row][initial_column]
+    ending_square = board[final_row][final_column]
+
+    #changing the value in the list that represents the board
+    board[initial_row][initial_column] = ' '
+    board[final_row][final_column] = starting_square
+
+    draw_board(board)
     
 
-    return new_board
+    return board
 
 
-print(move_piece(initial_board))
-
+move_piece(initial_board)
