@@ -1,5 +1,8 @@
 #Chess, for learning purposes. By /u/A440251.
 #TODO: work on the king_in_check logic. After that, work on START_2P
+#       ----> Learn how to deal with the out of range stuff. Filter that out
+#             Also clean up the black_king_in_check() somewhat.
+#             Do I really need to have seperate functions for black and white?
 """
 Welcome to Chess!
 
@@ -10,8 +13,22 @@ An answer of "!START2P will start a game for two players.
 An answer of !QUIT" will quit the game.
 
 """
-initial_board = [['R','N','B','Q','K','B','N','R'],
+
+#White pieces are designated by lower case letters
+#Black pieces are designated by upper case letters
+initial_board =\
+        [['R','N','B','Q','K','B','N','R'],
          ['P','P','P','P','P','P','P','P'],
+         [' ',' ',' ',' ',' ',' ',' ',' '],
+         [' ',' ',' ',' ',' ',' ',' ',' '],
+         [' ',' ',' ',' ',' ',' ',' ',' '],
+         [' ',' ',' ',' ',' ',' ',' ',' '],
+         ['p','p','p','p','p','p','p','p'],
+         ['r','n','b','q','k','b','n','r']]
+
+pawn_check_board =\
+        [['R','N','B','Q','K','B','N','R'],
+         ['P','P','P','P','P','p','P','P'],
          [' ',' ',' ',' ',' ',' ',' ',' '],
          [' ',' ',' ',' ',' ',' ',' ',' '],
          [' ',' ',' ',' ',' ',' ',' ',' '],
@@ -70,14 +87,35 @@ def move_piece(board):
 
     return board
 
-def king_in_check(board):
+def black_king_pos(board):
+    """Determines the position of the black king and
+    returns a tuple of the form (column_no, row_no)"""
     for column_no, column in enumerate(board):
         for row_no, row in enumerate(column):
             if column[row_no] == 'K':
-                print(column_no, row_no)
-            elif column[row_no] == 'k':
-                print(column_no, row_no)
+                b_king_pos = (column_no, row_no)
+                return b_king_pos
+def white_king_pos(board):
+    """Determines the position of the white king and
+    returns a tuple of the form (column_no, row_no)"""
+    for column_no, column in enumerate(board):
+        for row_no, row in enumerate(column):
+            if column[row_no] == 'k':
+                w_king_pos = (column_no, row_no)
+                return w_king_pos
+
+def black_king_in_check(board):
+    b_king_pos = black_king_pos(board)
+    #The logic for the pawn checks
+    if board[b_king_pos[0]+1][b_king_pos[1]-1] == "p" or\
+       board[b_king_pos[0]+1][b_king_pos[1]+1] == "p":
+           return True
+    else:
+        return False
+    
+            
 def START_2P():
+    """Starts a two-player game"""
     game_over = False
     whites_turn = True
     turn_number = 1
@@ -85,7 +123,7 @@ def START_2P():
     while not game_over:
         
         if whites_turn:
-            if not king_in_check(board):
+            if not white_king_in_check(board):
                 turn_number += 1
                 whites_turn = not whites_turn
         else:
@@ -112,7 +150,18 @@ if __name__ == "__main__":
 """
 
 def test_suite():
+    print("draw the board")
     draw_board(initial_board)
-    king_in_check(initial_board)
+    print("the black king starting position")
+    _t1 = black_king_pos(initial_board)
+    print(_t1)
+    
+    print("BKIC? should be true")
+    _t2 = black_king_in_check(pawn_check_board)
+    print(_t2)
+    
+    print("BKIC? should be false")
+    _t3 = black_king_in_check(initial_board)
+    print(_t3)
 
 test_suite()
